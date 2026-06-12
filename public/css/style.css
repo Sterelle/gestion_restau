@@ -1,0 +1,87 @@
+/* =========================================================
+   Dark Dashboard Theme - RestoManager
+   Inspired by the provided mockup
+   ========================================================= */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: #0b1220;
+    color: #cbd5e1;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Layout: sidebar + main ---------- */
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg,#0f1724 0%, #0b1220 100%);
+    border-right: 1px solid rgba(255,255,255,0.04);
+    padding: 28px 18px;
+    color: #9aa4b2;
+}
+.sidebar .logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; color:#fff; margin-bottom:18px; }
+.sidebar .logo .icon { background:#111827; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; color:#f59e0b; }
+.sidebar nav { margin-top:18px; display:flex; flex-direction:column; gap:8px; }
+.sidebar nav a { color: #9aa4b2; text-decoration:none; padding:10px 12px; border-radius:8px; display:flex; align-items:center; gap:10px; font-size:14px; }
+.sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,0.03); color:#fff; }
+.sidebar .footer { margin-top:auto; font-size:13px; color:#7b8794; }
+
+.main { flex:1; padding: 28px; }
+
+/* ---------- Top bar inside main ---------- */
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; }
+.search { background: rgba(255,255,255,0.03); padding:10px 12px; border-radius:10px; color:#cbd5e1; }
+.user { display:flex; align-items:center; gap:10px; }
+.user img { width:36px; height:36px; border-radius:50%; border:2px solid rgba(255,255,255,0.04); }
+
+/* ---------- Dashboard cards grid ---------- */
+.cards { display:grid; grid-template-columns: repeat(4, 1fr); gap:18px; margin-bottom:22px; }
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:16px; box-shadow: 0 6px 18px rgba(2,6,23,0.6); }
+.card h3 { color:#fff; font-size:20px; margin-bottom:6px; }
+.card p { color:#8b96a6; font-size:13px; }
+
+/* Larger content areas */
+.panel { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:18px; box-shadow: 0 6px 18px rgba(2,6,23,0.6); }
+
+/* Tables adapted to dark */
+table { width:100%; border-collapse: collapse; color:#cbd5e1; }
+table th, table td { padding:12px 14px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+table th { color:#9aa4b2; font-size:13px; text-align:left; }
+table tr:hover { background: rgba(255,255,255,0.02); }
+
+/* Forms */
+form.formulaire { background: transparent; padding:12px; border-radius:10px; }
+input, select, textarea { background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); color:#cbd5e1; padding:8px; border-radius:8px; }
+
+/* Buttons */
+button, .btn { background: #f59e0b; color:#0b1220; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; }
+.btn-secondaire { background: rgba(255,255,255,0.04); color:#cbd5e1; }
+.btn-sm { padding:6px 10px; font-size:13px; }
+
+/* Badges */
+.badge { padding:6px 10px; border-radius:999px; font-size:12px; color:#fff; }
+.badge-en_attente { background:#f59e0b; }
+.badge-en_preparation { background:#3b82f6; }
+.badge-servie { background:#8b5cf6; }
+.badge-payee { background:#10b981; }
+.badge-annulee { background:#ef4444; }
+.badge-libre { background:#10b981; }
+.badge-occupee { background:#ef4444; }
+.badge-reservee { background:#f59e0b; }
+
+/* Responsive */
+@media (max-width: 1000px) {
+    .cards { grid-template-columns: repeat(2,1fr); }
+    .sidebar { display:none; }
+    .main { padding:16px; }
+}
+
+@media (max-width: 600px) {
+    .cards { grid-template-columns: 1fr; }
+}
+
+/* Footer */
+footer { text-align:center; color:#7b8794; padding:18px 0; }
+

@@ -94,9 +94,9 @@ CREATE TABLE commande_details (
 
 -- Compte admin par défaut : email = admin@resto.com / mot de passe = admin123
 INSERT INTO utilisateurs (nom, email, mot_de_passe, role) VALUES
-('Administrateur', 'admin@resto.com', '$2b$12$Daws53eRFbMTTXEeOtPtDuqL9xMopbctIhHFv4T/8KhTBCVMpJ4FO', 'admin'),
-('Jean Serveur', 'jean@resto.com', '$2b$12$Daws53eRFbMTTXEeOtPtDuqL9xMopbctIhHFv4T/8KhTBCVMpJ4FO', 'serveur'),
-('Paul Cuisinier', 'paul@resto.com', '$2b$12$Daws53eRFbMTTXEeOtPtDuqL9xMopbctIhHFv4T/8KhTBCVMpJ4FO', 'cuisinier');
+('Administrateur', 'admin@resto.com', '$2b$12$.zV2tmy8Hln.4.E.DOZaDuex9rZYF4e0PXw98vjEeSnimIMaCw3kW', 'admin'),
+('Jean Serveur', 'jean@resto.com', '$2b$12$.zV2tmy8Hln.4.E.DOZaDuex9rZYF4e0PXw98vjEeSnimIMaCw3kW', 'serveur'),
+('Paul Cuisinier', 'paul@resto.com', '$2b$12$.zV2tmy8Hln.4.E.DOZaDuex9rZYF4e0PXw98vjEeSnimIMaCw3kW', 'cuisinier');
 
 INSERT INTO categories (nom) VALUES
 ('Entrées'),

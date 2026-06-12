@@ -1,74 +1,79 @@
-# RestoManager - Plateforme de gestion de restaurant
+# RestoManager — Version MVC / SOLID
 
-Projet basique en HTML / CSS / PHP / MySQL conçu pour XAMPP, destiné à un débutant.
+## Installation (XAMPP)
 
-## 📁 Structure du projet
+1. Copier le dossier `mvc` dans `htdocs` (ex : `htdocs/restaurant_app`).
+2. Importer `database.sql` dans phpMyAdmin (crée la base `restaurant_db`).
+3. Vérifier les identifiants dans `config/database.php` (par défaut : `root` / mot de passe vide).
+4. Ouvrir `http://localhost/restaurant_app/public/index.php`.
+5. Connexion : `admin@resto.com` / `admin123`.
+
+## Architecture MVC
 
 ```
-restaurant_app/
-├── config.php              -> connexion à la base de données
-├── database.sql            -> script SQL à importer (tables + données de test)
-├── login.php                -> page de connexion
-├── logout.php               -> déconnexion
-├── header.php / footer.php  -> structure commune (menu de navigation)
-├── index.php                -> tableau de bord (statistiques)
-├── menus.php                -> gestion des plats / menus (CRUD)
-├── recettes.php             -> gestion des recettes liées aux plats (CRUD)
-├── tables.php               -> gestion des tables du restaurant
-├── commandes.php            -> gestion des commandes (création + statut)
-├── commande_details.php     -> détail d'une commande (ajout/retrait de plats)
-├── utilisateurs.php         -> gestion des utilisateurs (admin uniquement)
-└── css/
-    └── style.css             -> mise en forme générale
+mvc/
+├── autoload.php              # autoloader PSR-4 (namespace App\)
+├── config/database.php       # configuration BDD
+├── database.sql
+├── public/
+│   ├── index.php              # Front Controller (point d'entrée, routage, DI)
+│   └── css/style.css
+└── src/
+    ├── Core/                  # Composants transverses
+    │   ├── Database.php       # connexion mysqli
+    │   ├── Session.php        # gestion de session
+    │   ├── View.php            # moteur de rendu
+    │   └── Controller.php      # contrôleur abstrait (helpers communs)
+    ├── Models/                # Entités (Utilisateur, Menu, Commande, ...)
+    ├── Repositories/          # Accès aux données (interfaces + implémentations MySQL)
+    ├── Services/              # Logique métier (règles, calculs, validations)
+    ├── Controllers/           # Contrôleurs (orchestrent Service <-> Vue)
+    └── Views/                 # Templates PHP (présentation uniquement)
 ```
 
-## ⚙️ Installation avec XAMPP
+## Respect des principes SOLID
 
-1. Démarrez **Apache** et **MySQL** depuis le panneau de contrôle XAMPP.
-2. Copiez le dossier `restaurant_app` dans `C:\xampp\htdocs\` (Windows)
-   ou `/Applications/XAMPP/htdocs/` (Mac).
-3. Ouvrez **phpMyAdmin** (http://localhost/phpmyadmin).
-4. Créez une nouvelle base ou importez directement le fichier `database.sql`
-   (il crée la base `restaurant_db` automatiquement avec l'option
-   "Importer" dans phpMyAdmin).
-5. Ouvrez votre navigateur à l'adresse :
-   `http://localhost/restaurant_app/login.php`
+- **S — Single Responsibility** : chaque classe a un seul rôle.
+  `Database` (connexion), `Session` (état HTTP), `View` (rendu),
+  un `Repository` par entité (persistance), un `Service` par domaine
+  (règles métier), un `Controller` par domaine (orchestration HTTP).
 
-## 🔑 Compte de démonstration
+- **O — Open/Closed** : les contrôleurs et services dépendent
+  d'interfaces (`*RepositoryInterface`). On peut ajouter une nouvelle
+  implémentation (ex : cache, autre SGBD, jeu de tests) sans modifier
+  le code existant.
 
-- **Email** : admin@resto.com
-- **Mot de passe** : admin123
-- **Rôle** : admin (accès complet, y compris la gestion des utilisateurs)
+- **L — Liskov Substitution** : toute implémentation d'une interface
+  de Repository (ex : `MenuRepository`) peut remplacer une autre sans
+  casser le `MenuService` qui l'utilise, car les contrats (signatures
+  et types de retour) sont respectés.
 
-D'autres comptes de test (même mot de passe `admin123`) :
-- jean@resto.com (rôle : serveur)
-- paul@resto.com (rôle : cuisinier)
+- **I — Interface Segregation** : chaque Repository a sa propre
+  interface, restreinte aux opérations réellement nécessaires à son
+  entité (pas d'interface fourre-tout `RepositoryInterface` générique).
 
-## 🍽️ Fonctionnalités incluses
+- **D — Dependency Inversion** : les `Services` et `Controllers`
+  dépendent des interfaces (`UtilisateurRepositoryInterface`,
+  `CommandeRepositoryInterface`, ...), et c'est le Front Controller
+  (`public/index.php`) qui injecte les implémentations concrètes
+  (Injection de Dépendances manuelle, sans framework).
 
-- **Authentification** : connexion / déconnexion avec sessions PHP et mots
-  de passe hachés (`password_hash` / `password_verify`).
-- **Gestion des utilisateurs** (admin) : ajout, modification, suppression,
-  gestion des rôles (admin, manager, serveur, cuisinier).
-- **Gestion des menus** : ajout/modification/suppression des plats,
-  catégories, prix, disponibilité.
-- **Gestion des recettes** : fiche technique liée à chaque plat
-  (ingrédients, temps de préparation, instructions).
-- **Gestion des tables** : ajout de tables, changement de statut
-  (libre / occupée / réservée).
-- **Gestion des commandes** :
-  - création d'une commande liée à une table,
-  - ajout/retrait de plats dans la commande,
-  - calcul automatique du total,
-  - changement du statut (en attente, en préparation, servie, payée, annulée),
-  - libération automatique de la table une fois la commande payée ou annulée.
-- **Tableau de bord** : statistiques en temps réel (commandes en attente,
-  tables occupées, chiffre d'affaires du jour, dernières commandes).
+## Flux d'une requête
 
-## 🛠️ Pistes d'amélioration (pour aller plus loin)
+1. `public/index.php` reçoit la requête, lit `?page=...`.
+2. Le routeur associe la page à `[Controller, méthode]`.
+3. Le `Controller` valide la session/rôle, lit `$_GET`/`$_POST`,
+   appelle le `Service` correspondant.
+4. Le `Service` applique les règles métier en s'appuyant sur les
+   `Repository` (via leurs interfaces).
+5. Le `Controller` transmet les données (Modèles) à la `View`, qui
+   les insère dans le layout commun (`layouts/principal.php`).
 
-- Ajouter la gestion du stock / des ingrédients.
-- Ajouter l'impression de tickets de caisse (PDF).
-- Ajouter des statistiques par période (jour, semaine, mois) avec des graphiques.
-- Ajouter la possibilité d'uploader des photos pour chaque plat.
-# gestion_restau
+## Différences avec la version originale
+
+- Code SQL et HTML précédemment mélangés dans des fichiers uniques
+  (ex : `commandes.php`) sont désormais séparés en couches distinctes.
+- Le hachage des mots de passe et le recalcul des totaux de commande
+  sont centralisés dans les Services (évite la duplication).
+- Les règles métier (ex : libérer une table quand une commande est
+  payée/annulée) sont déplacées du contrôleur vers `CommandeService`.
